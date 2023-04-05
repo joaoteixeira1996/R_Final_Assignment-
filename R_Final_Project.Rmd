@@ -21,7 +21,7 @@ library(reshape2)
 library(ggplot2)
 library(forcats)
 
-df <- read.csv("C:/Users/Usuario/Downloads/Energy_Transition (3).csv")
+df <- read.csv("https://raw.githubusercontent.com/joaoteixeira1996/R_Final_Assignment-/main/Energy_Transition%20(3).csv")
 
 # Relabel the levels of the Technology variable
 df$Technology <- fct_recode(df$Technology,
@@ -46,7 +46,7 @@ df$Year <- as.integer(substring(df$Year, 2))
 df <- df %>%
   group_by(Country, Year, Indicator, Technology, Energy_Type, Unit) %>%
   summarize(value = first(value))
-
+ 
 #reordering
 df <- df[, c('Country', 'Year', 'Indicator', 'Technology', 'Energy_Type', 'Unit', 'value')]
 ```
@@ -61,7 +61,7 @@ This project aims to perform data analysis on the evolution of the use of differ
 
 To perform this analyzes, I will use the Energy Transition Dataset from the International Renewable Energy Agency, which was accessed from the IMF Climate Change Board. This dataset contains information on the amount of energy produced in different countries from a variety of sources (Solar, Nuclear, etc). 
 
-During the past decades there has been important debates on the matter of energy. First, the debate on climate change has emphasized the importance of moving from fossil fuels to renewable ones. The discussion has been around for many years now, and one should expect to see some results of it on the data. Second, em 2011 the Fukushima nuclear disaster casted doubts on the safety of nuclear power plants, making countries announce the reduction of the production of energy from this source. This dataset allows to visualize these trends on the energy sources and I will do some further investigation on these topics. 
+During the past decades there has been important debates on the matter of energy. First, the debate on climate change has emphasized the importance of moving from fossil fuels to renewable ones. The discussion has been around for many years now, and one should expect to see some results of it on the data. Second, in 2011 the Fukushima nuclear disaster casted doubts on the safety of nuclear power plants, making countries announce the reduction of the production of energy from this source. This dataset allows to visualize these trends on the energy sources and I will do some further investigation on these topics. 
 
 To see the overall picture of energy generation, the next chart is useful.
 
@@ -84,6 +84,8 @@ chart1 <- ggplot(df_generation_world, aes(x=Year, y=value, fill=Technology)) +
   theme(legend.position="bottom",legend.key.height = unit(0.5, "cm"), 
         legend.key.width = unit(0.5, "cm"))
 print(chart1)
+
+ggsave("plots/chart1.png")
 ```
 
 The chart shows some interesting trends that I will explore throughout the project. First, there is an upward trend in energy generation in the world. Fossil fuels represent the biggest chunk of the energy generated and this production has grown in the past two decades. The good news for the environment is the increase in the production of renewable energy such as hydropower, solar, and wind. 
@@ -203,6 +205,7 @@ chart2 <- ggplot(df_filtered, aes(x = Country, y = value, fill = Technology)) +
   guides(fill = guide_legend(nrow = 3))
 
 print(chart2)
+ggsave("plots/chart2.png")
 ```
 
 A few points come from this chart. First, one can verify that Asia is the biggest producer of energy in the world. This should not come as a surprise, given that the continent has the biggest population in the world and some of the biggest producers of energy of the planet such as the Gulf Countries or Central Asia. Europe and North America seem to be almost tied to the second position. 
@@ -235,6 +238,7 @@ chart3 <- ggplot(df_nuclear, aes(x = Year, y = value, color = Country)) +
   # Move the legend outside the plot area
   theme(legend.position="bottom")
 print(chart3)
+ggsave("plots/chart3.png")
 ```
 
 There is a clear fall in the nuclear energy production in 2011, following the Japanese disaster. Of course one cannot take causality just by looking at a chart, but given our knowledge of the reduction in the use of this source of energy, it seems it caused some impact. However, in the following years, the production seem to catch up to its former level. 
@@ -250,7 +254,7 @@ To check what actually happens I will run and exlain the following code.
 
 ```{r, echo = FALSE, include=TRUE}
 # I had to read the file again because I was having some weird errors when trying to export to PDF
-df <- read.csv("C:/Users/Usuario/Downloads/Energy_Transition (3).csv")
+df <- read.csv("https://raw.githubusercontent.com/joaoteixeira1996/R_Final_Assignment-/main/Energy_Transition%20(3).csv")
 
 #getting rid of unnawanted columns
 df <- select(df, -ISO2, -ISO3, -Source, -CTS_Name, -CTS_Code, -CTS_Full_Descriptor)
@@ -333,7 +337,7 @@ ggplot(reshaped_df2, aes(x = Solar_log, y = Wind_log)) +
   geom_point() + geom_smooth(method = "lm", se = FALSE) 
 
 
-ggsave("plots/my_plot5.png")
+ggsave("plots/my_plot4.png")
 
 # I also run a regression, having solar energy as the dependent variable and wind as the independent. 
 model <- lm(Solar_log ~ Wind_log, data = reshaped_df2)
